@@ -1,24 +1,113 @@
-# AgriPredict
+# 🌾 AgriPredict — Crop Yield Prediction System
 
-Crop yield and profit web app: Flask backend, scikit-learn model trained on real ICRISAT district data, SQLite accounts, live weather and mandi prices.
+AgriPredict is a machine learning-based web application that predicts agricultural crop yield using input parameters such as crop, region, district, year, temperature, and rainfall. It also displays estimated profit based on the application's prediction logic.
 
-## Run it
+## 🚀 Features
+
+- Crop yield prediction using a trained machine learning model
+- District and region-based inputs
+- Temperature, rainfall, and year as prediction parameters
+- Estimated profit display
+- Simple web interface built with Flask
+- Online deployment using Render
+
+## 🛠️ Technologies Used
+
+- **Programming Language:** Python
+- **Machine Learning:** Scikit-learn
+- **Data Processing:** Pandas, NumPy
+- **Web Framework:** Flask
+- **Model Serialization:** Joblib
+- **Deployment:** Render
+- **Version Control:** Git and GitHub
+
+## ⚙️ Run Locally
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/adityasonawane-source/AgriPredict.git
+cd AgriPredict
 ```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it on Windows:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
-python app.py            # http://127.0.0.1:5000   (model.joblib is included)
 ```
-Optional: set `DATA_GOV_API_KEY` (free, data.gov.in) for live mandi prices. For production use `gunicorn -w 2 app:app`, HTTPS, `COOKIE_SECURE=1` and `SECRET_KEY`.
 
-## The data and model
-- Source: ICRISAT district-level data, 560 districts, 1990-2015 (Mendeley, DOI 10.17632/ywp3y5j9vv.1).
-- Crops available in that file: rice, pearl millet, groundnut, chickpea. It has no wheat, maize, soybean or cotton.
-- `prepare_icrisat.py` builds `data/training.csv` (36.8k district-year-crop rows) with the weather of each crop's growing window: Kharif Jun-Sep, Rabi Oct-Feb. Rainfall is summed over months.
-- `train.py` fits a gradient-boosting model on crop, state, year, rainfall and temperature.
-- Held-out check (trained to 2009, tested on 2010-2015): R² 0.57, mean error 421 kg/ha. A plain crop+state average scores R² 0.45, error 486 kg/ha.
+### 4. Start the application
 
-## Limits
-- It predicts district-average yields from 1990-2015, so newer varieties and farm-level irrigation are not captured. The year is capped at 2015.
-- Irrigation is not an input, so the rainfall response is not always smooth (dry irrigated districts and very wet districts both score high).
-- Soil and humidity are not in the data; they are rule-of-thumb adjustments. The 40% off-season cut is also a rule.
-- Prices and costs per hectare are rough defaults. Check the Agmarknet commodity names in `common.py` against data.gov.in.
-- Live weather and mandi calls are untested (no internet where this was built).
+```bash
+python app.py
+```
+
+Open `http://127.0.0.1:5000` in your browser.
+
+## 📊 Machine Learning Model
+
+AgriPredict uses a trained Scikit-learn pipeline to estimate crop yield from agricultural input data.
+
+**Input features:**
+- Crop
+- Region
+- District
+- Year
+- Temperature
+- Rainfall
+
+**Output:** Predicted crop yield and estimated profit.
+
+Model predictions are estimates and should not be treated as guaranteed agricultural outcomes.
+
+## 🌐 Live Demo
+
+[Open AgriPredict]https://(agripredict-xikn.onrender.com)
+
+## 📂 Project Structure
+
+```text
+AgriPredict/
+├── app.py
+├── common.py
+├── services.py
+├── train.py
+├── model_district.joblib
+├── requirements.txt
+├── README.md
+├── data/
+└── static/
+```
+
+## 🔮 Future Improvements
+
+- Add more weather and soil parameters
+- Improve model accuracy using additional agricultural datasets
+- Add interactive charts for crop yield trends
+- Improve the user interface for mobile devices
+- Provide crop-wise comparisons and decision support
+
+## 👨‍💻 Author
+
+**Aditya Sonawane**
+
+GitHub: [adityasonawane-source](https://github.com/adityasonawane-source)
+
+LinkedIn: [Aditya Sonawane](https://www.linkedin.com/in/aditya-sonawane-8999828720c)
+
+---
+
+*AgriPredict — Using machine learning to support data-driven agricultural decisions.*
+
