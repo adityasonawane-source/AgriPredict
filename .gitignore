@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+.secret_key
+.env
+.env.*
+!.env.example
+.git/
+model_backup.joblib
+model.joblib

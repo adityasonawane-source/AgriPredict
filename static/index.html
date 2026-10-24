@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AgriPredict</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f6f2;--card:#fff;--ink:#1c2b22;--mute:#667a6d;--line:#dbe6dd;--g:#1f8a4c;--gd:#14532d;--gl:#e3f3e8;--or:#f5a31a;--side:#e4efe6;--bad:#c0452f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121c16;--card:#1b2a21;--ink:#e5eee7;--mute:#9bb0a1;--line:#2e4336;--g:#46b873;--gd:#0e3a22;--gl:#21392b;--or:#f0b13e;--side:#17241c;--bad:#ef8a73;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121c16;--card:#1b2a21;--ink:#e5eee7;--mute:#9bb0a1;--line:#2e4336;--g:#46b873;--gd:#0e3a22;--gl:#21392b;--or:#f0b13e;--side:#17241c;--bad:#ef8a73;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{header{background:#14532d;color:#fff;display:flex;margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 Poppins,system-ui,-apple-system,"Segoe UI",sans-serif}
+align-items:center;gap:18px;padding:12px 20px;flex-wrap:wrap}
+header .logo{font-weight:700;font-size:20px;display:flex;gap:8px;align-items:center}
+header .tag{font-size:12px;opacity:.85;border-left:1px solid #ffffff55;padding-left:18px}
+header .user{margin-left:auto;font-size:13px}
+.shell{display:grid;grid-template-columns:150px 1fr;min-height:calc(100vh - 56px)}
+nav{background:var(--side);padding:12px 8px}
+nav button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;color:var(--ink);font:inherit;font-weight:500;padding:11px 12px;border-radius:8px;cursor:pointer;text-align:left}
+nav button.on{background:var(--gl);color:var(--g)}
+nav button:focus-visible,.btn:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+main{padding:20px;min-width:0}
+h1{font-size:clamp(24px,4vw,32px);margin:0 0 4px;font-weight:700}
+.lead{color:var(--mute);max-width:56ch;margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.card h2{font-size:15px;font-weight:600;margin:0 0 12px}
+.top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px}
+label{display:block;font-size:12.5px;color:var(--mute);margin-bottom:3px}
+select,input{width:100%;font:inherit;padding:9px 10px;border:1px solid var(--line);border-radius:7px;background:var(--card);color:var(--ink)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.btn{font:inherit;font-weight:600;padding:11px;border-radius:7px;cursor:pointer;border:1px solid var(--g);background:var(--card);color:var(--ink)}
+.btn.p{background:var(--g);color:#fff}
+.res{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
+.kpi small{color:var(--mute);display:block}.kpi b{font-size:clamp(20px,3vw,26px);font-weight:700;color:var(--gd);font-variant-numeric:tabular-nums}
+:root[data-theme="dark"] .kpi b{color:var(--g)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .kpi b{color:var(--g)}}
+.note{background:var(--gl);border-radius:8px;padding:9px 12px;margin:12px 0;font-size:12.5px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+td,th{padding:5px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--mute);font-weight:500}
+.scroll{overflow-x:auto}
+.bot{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px}
+.leg{display:flex;gap:14px;font-size:12px;justify-content:center;color:var(--mute)}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.tip{display:flex;gap:10px;align-items:center;padding:8px 0;font-size:13px;border-bottom:1px solid var(--line)}
+.tip:last-child{border:0}
+.tip span{width:30px;height:30px;border-radius:50%;background:var(--gl);display:grid;place-items:center;flex:none}
+.hide{display:none}
+footer{text-align:center;color:var(--mute);font-size:12px;padding:16px}
+@media(max-width:900px){.top,.bot{grid-template-columns:1fr}}
+@media(max-width:700px){.shell{grid-template-columns:1fr}nav{display:flex;overflow-x:auto;padding:6px}nav button{width:auto;white-space:nowrap}header .tag{display:none}.res,.f{grid-template-columns:1fr 1fr}}
+dialog{border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);padding:18px}dialog::backdrop{background:#0006}
+
+/* AgriPredict dashboard polish */
+header {
+  background: linear-gradient(120deg, #14532d, #1f8a4c);
+  box-shadow: 0 4px 18px rgba(20, 83, 45, 0.12);
+  padding: 16px 24px;
+}
+
+.shell {
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 0;
+}
+
+nav {
+  padding: 20px 12px;
+  border-right: 1px solid var(--line);
+}
+
+nav button {
+  margin-bottom: 6px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+nav button:hover {
+  background: var(--gl);
+  transform: translateX(2px);
+}
+
+main {
+  padding: clamp(18px, 3vw, 32px);
+}
+
+.card {
+  border-radius: 16px;
+  padding: 22px;
+  box-shadow: 0 5px 20px rgba(30, 70, 40, 0.045);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 26px rgba(30, 70, 40, 0.08);
+}
+
+select,
+input {
+  min-height: 42px;
+  border-radius: 9px;
+  transition: border-color 0.2s ease;
+}
+
+select:focus,
+input:focus {
+  border-color: var(--g);
+}
+
+.btn {
+  border-radius: 9px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn:hover {
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+}
+
+.btn.p {
+  box-shadow: 0 4px 12px rgba(31, 138, 76, 0.18);
+}
+
+.kpi {
+  padding: 18px 12px;
+  border-radius: 14px;
+  background: var(--card);
+}
+
+.note {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+@media (max-width: 760px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 6px;
+    padding: 8px;
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  nav button {
+    width: auto;
+    white-space: nowrap;
+    margin-bottom: 0;
+  }
+
+  .top {
+    grid-template-columns: 1fr;
+  }
+
+  main {
+    padding: 14px;
+  }
+
+  .card {
+    padding: 16px;
+  }
+}
+
+</style>
+</head>
+<body>
+<header><div class="logo">🌱 AgriPredict</div><div class="tag">Smarter farming · Better yields · Higher profits</div><div class="user"><span id="who">Guest</span> <button class="btn" id="auth" style="padding:4px 12px;margin-left:8px;color:#fff;background:transparent;border-color:#ffffff88">Sign in</button></div></header>
+<div class="shell">
+<nav aria-label="Main"><button data-v="home" class="on">⌂ Home</button><button data-v="predict">↗ Predict</button><button data-v="history">◷ History</button><button data-v="about">ⓘ About</button></nav>
+<main>
+<section id="v-home">
+<h1>Crop yield and profit prediction</h1>
+<p class="lead">Estimate crop yield and expected profit per hectare from weather, soil and farming conditions.</p>
+<div class="top">
+<div class="card" id="formcard"><h2>Enter input parameters</h2>
+<div class="f">
+<div><label for="crop">Crop</label><select id="crop"></select></div>
+<div><label for="region">Region</label><select id="region"></select></div>
+<div>
+  <label for="district">District</label>
+  <select id="district">
+    <option>Select district</option>
+  </select>
+</div>
+<div><label for="season">Season</label><select id="season"><option>Kharif</option><option>Rabi</option></select></div>
+<div><label for="year">Year</label><input id="year" type="number" min="2020" max="2040"></div>
+<div><label for="temp">Temperature (°C)</label><input id="temp" type="number" min="5" max="45" step="0.5"></div>
+<div><label for="rain">Rainfall (mm)</label><input id="rain" type="number" min="0" max="3000"></div>
+<div><label for="hum">Humidity (%)</label><input id="hum" type="number" min="5" max="100"></div>
+<div><label for="soil">Soil type</label><select id="soil"></select></div>
+</div>
+<div class="btns"><button class="btn p" id="go">Predict</button><button class="btn" id="reset">Reset</button></div>
+<button class="btn" id="wx" style="width:100%;margin-top:10px">Fill weather from last season’s data</button><p class="lead" id="wxn" style="font-size:12px;margin:6px 0 0"></p>
+<div class="note" id="err" hidden style="background:#fbe3dd"></div>
+</div>
+<div class="card"><h2>Prediction results</h2>
+<div class="res"><div class="kpi"><small>Predicted yield</small><b id="ry"></b><small>kg/ha, approximate</small></div><div class="kpi"><small>Expected profit</small><b id="rp"></b><small>per ha, approximate</small></div></div>
+<div class="note" id="rn"></div>
+<h2 style="font-size:13px;margin-bottom:4px">Input summary</h2><table id="sum"></table>
+</div></div>
+<div class="bot">
+<div class="card"><h2>Yield vs profit for different crops</h2><div id="bars"></div><div class="leg"><span><i style="background:var(--g)"></i>Yield (kg/ha)</span><span><i style="background:var(--or)"></i>Profit (₹/ha)</span></div></div>
+<div class="card"><h2>Soil and weather impact</h2><div id="radar"></div></div>
+<div class="card"><h2>Tips for better profit</h2><div id="tips"></div></div>
+</div>
+</section>
+<section id="v-history" class="hide"><h1>History</h1><p class="lead" id="hl">Your last 20 predictions, saved in this browser only.</p><div class="card scroll"><table id="ht"></table><p id="he" class="lead" style="margin:10px 0 0">No predictions yet. Run one from Home.</p><button class="btn" id="clr" style="margin-top:12px;padding:8px 14px">Clear history</button></div></section>
+<section id="v-about" class="hide"><h1>About</h1><div class="card"><p style="margin-top:0">AgriPredict estimates yield per hectare for a crop, state and season’s weather, then profit as yield × price minus a typical cash cost per hectare.</p><p>Yield comes from a gradient-boosting model trained on ICRISAT district data (1990–2015) for rice, pearl millet, groundnut and chickpea, using crop, state, year, season rainfall and season temperature. Soil type and humidity are not in that data, so they are rule-of-thumb adjustments. A crop sown outside its usual season takes a 40% cut.</p><p style="margin-bottom:0">The model reads district averages from 1990–2015, so it does not capture newer varieties or farm-level irrigation, and its rainfall response is not always smooth. Prices come from Agmarknet when a data.gov.in key is set, otherwise from typical defaults. Weather fill uses last season’s Open-Meteo data. Treat results as planning estimates.</p></div></section>
+</main></div>
+<dialog id="dlg"><div style="min-width:260px"><h2 style="margin:0 0 10px;font-size:16px">Sign in to save history</h2>
+<label for="em">Email</label><input id="em" type="email" autocomplete="email"><label for="pw" style="margin-top:8px">Password (8+ characters)</label><input id="pw" type="password" autocomplete="current-password">
+<p id="derr" style="color:var(--bad);margin:8px 0 0;min-height:20px"></p>
+<div style="display:flex;gap:8px;margin-top:8px"><button class="btn p" id="lg" style="flex:1">Sign in</button><button class="btn" id="rg" style="flex:1">Create account</button><button class="btn" id="cx" style="border-color:var(--line)">Cancel</button></div></div></dialog>
+<footer id="ft">© 2025 AgriPredict. Estimates only.</footer>
+<script>
+var C={Rice:{y:3500,w:1100,t:27,tw:9,p:23,c:45000,s:"Kharif"},"Pearl millet":{y:2000,w:450,t:29,tw:8,p:26,c:22000,s:"Kharif"},Groundnut:{y:2200,w:600,t:27,tw:8,p:65,c:40000,s:"Kharif"},Chickpea:{y:1400,w:250,t:21,tw:8,p:55,c:28000,s:"Rabi"}};
+var R={};['Andhra Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Odisha', 'Punjab', 'Rajasthan', 'Tamil Nadu', 'Telangana', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal'].forEach(function(k){R[k]=1});
+var SO={Loam:1,"Black (regur)":.98,Alluvial:1,Clay:.92,Red:.88,Sandy:.82};
+var D={crop:"Rice",region:"Maharashtra",season:"Kharif",year:2025,temp:27,rain:900,hum:70,soil:"Loam"};
+var ids=Object.keys(D),$=function(i){return document.getElementById(i)};
+function opts(id,o){$(id).innerHTML=Object.keys(o).map(function(k){return"<option>"+k+"</option>"}).join("")}
+opts("crop",C);opts("region",R);opts("soil",SO);
+function fmt(n){return Math.round(n).toLocaleString("en-IN")}
+function rup(n){return(n<0?"−":"")+"₹ "+fmt(Math.abs(n))}
+function calc(s){var c=C[s.crop],eff=s.rain+.8*Math.max(0,c.w-s.rain),r=eff/c.w;
+var w=r>1.4?Math.max(.5,1-.35*(r-1.4)):1;
+var t=Math.max(.15,1-Math.pow((s.temp-c.t)/c.tw,2));
+var h=Math.max(.8,1-.004*Math.max(0,Math.abs(s.hum-60)-15));
+var so=SO[s.soil]+((s.crop=="Cotton"||s.crop=="Soybean")&&s.soil=="Black (regur)"?.05:0);
+var rg=R[s.region],yr=1+.01*(s.year-2025),se=c.s==s.season?1:.6;
+var y=c.y*t*w*h*so*rg*yr*se,pr=c.p*(1+.04*(s.year-2025));
+return{y:y,p:y*pr-c.c,f:{Temperature:t,Rainfall:w,Humidity:h,"Soil quality":Math.min(1,so*rg),"Yield potential":y/c.y},se:se}}
+function read(){var s={};ids.forEach(function(k){var e=$(k).value;s[k]=$(k).type=="number"?parseFloat(e):e});return s}
+function write(s){ids.forEach(function(k){$(k).value=s[k]})}
+function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v||1))),f=v/p;return(f<=1?1:f<=2?2:f<=5?5:10)*p}
+function bars(s){var d=(window.ALL||[]).length?window.ALL.map(function(a){return[a[0],a[1],Math.max(0,a[2])]}):Object.keys(C).map(function(k){var x=calc({crop:k,region:s.region,season:s.season,year:s.year,temp:s.temp,rain:s.rain,hum:s.hum,soil:s.soil});return[k,x.y,Math.max(0,x.p)]});
+var my=nice(Math.max.apply(0,d.map(function(a){return a[1]}))),mp=nice(Math.max.apply(0,d.map(function(a){return a[2]}))),o="";
+for(var i=0;i<=4;i++){var yy=160-i*36;o+='<line x1="44" x2="318" y1="'+yy+'" y2="'+yy+'" style="stroke:var(--line)"/><text x="40" y="'+(yy+3)+'" text-anchor="end" font-size="8" style="fill:var(--mute)">'+fmt(my/4*i)+'</text><text x="322" y="'+(yy+3)+'" font-size="8" style="fill:var(--mute)">'+fmt(mp/4*i/1000)+'k</text>'}
+d.forEach(function(a,i){var x=52+i*54,h1=a[1]/my*144,h2=a[2]/mp*144;o+='<rect x="'+x+'" y="'+(160-h1)+'" width="17" height="'+h1+'" rx="2" style="fill:var(--g)"/><rect x="'+(x+19)+'" y="'+(160-h2)+'" width="17" height="'+h2+'" rx="2" style="fill:var(--or)"/><text x="'+(x+18)+'" y="174" text-anchor="middle" font-size="9" style="fill:var(--ink)">'+a[0]+'</text>'});
+$("bars").innerHTML='<svg viewBox="0 0 340 182" width="100%" role="img" aria-label="Yield and profit by crop">'+o+'</svg>'}
+function radar(f){var k=Object.keys(f),cx=110,cy=100,R0=70,pts=[],o="";
+[.25,.5,.75,1].forEach(function(l){var p=k.map(function(_,i){var a=-Math.PI/2+i*2*Math.PI/5;return(cx+Math.cos(a)*R0*l).toFixed(1)+","+(cy+Math.sin(a)*R0*l).toFixed(1)}).join(" ");o+='<polygon points="'+p+'" fill="none" style="stroke:var(--line)"/>'});
+k.forEach(function(n,i){var a=-Math.PI/2+i*2*Math.PI/5,v=Math.max(.05,f[n]);pts.push((cx+Math.cos(a)*R0*v).toFixed(1)+","+(cy+Math.sin(a)*R0*v).toFixed(1));
+o+='<line x1="'+cx+'" y1="'+cy+'" x2="'+(cx+Math.cos(a)*R0)+'" y2="'+(cy+Math.sin(a)*R0)+'" style="stroke:var(--line)"/><text x="'+(cx+Math.cos(a)*(R0+14))+'" y="'+(cy+Math.sin(a)*(R0+12)+3)+'" text-anchor="middle" font-size="9" style="fill:var(--ink)">'+n+'</text>'});
+o+='<polygon points="'+pts.join(" ")+'" style="fill:var(--g);fill-opacity:.3;stroke:var(--g);stroke-width:2"/>';
+$("radar").innerHTML='<svg viewBox="0 0 220 200" width="100%" style="max-width:300px;display:block;margin:auto" role="img" aria-label="Factor scores out of 100%">'+o+'</svg>'}
+function tips(s,r){var c=C[s.crop],f=r.f,m="Temperature",tp;
+["Temperature","Rainfall","Humidity","Soil quality"].forEach(function(k){if(f[k]<f[m])m=k});
+var T={Temperature:["🌤","Temperature is off the optimum of about "+c.t+" °C. Adjust sowing date or choose a suited variety."],Rainfall:["💧",s.rain<c.w?"Water is short of the ~"+c.w+" mm need. Plan irrigation for dry spells.":"Rainfall is above need. Improve drainage to avoid waterlogging."],Humidity:["🌫","Humidity is outside the comfortable range. Scout often for fungal disease."],"Soil quality":["🧱","Soil is limiting yield. Add organic matter and match the crop to the soil."]};
+var l=[f[m]>.97?["✅","No major limit found. Gains now come from price and cost control."]:T[m],["🌱","Keep soil pH near 6.0–7.5 for better yield."],["🧪","Apply fertilizers as recommended by a soil test."],["📡","Check weather forecasts to manage risk."]];
+$("tips").innerHTML=l.map(function(a){return'<div class="tip"><span>'+a[0]+'</span>'+a[1]+'</div>'}).join("")}
+function hist(){var h=[];try{h=JSON.parse(localStorage.getItem("agri_h")||"[]")}catch(e){}return h}
+function save(s,r){var h=hist();h.unshift({t:new Date().toLocaleString("en-IN"),c:s.crop,g:s.region,s:s.season,y:r.y,p:r.p});try{localStorage.setItem("agri_h",JSON.stringify(h.slice(0,20)))}catch(e){}}
+function drawH(){var h=hist();$("he").hidden=h.length>0;$("clr").hidden=!h.length;$("ht").innerHTML=h.length?"<tr><th>When</th><th>Crop</th><th>Region</th><th>Season</th><th>Yield (kg/ha)</th><th>Profit (₹/ha)</th></tr>"+h.map(function(x){return"<tr><td>"+x.t+"</td><td>"+x.c+"</td><td>"+x.g+"</td><td>"+x.s+"</td><td>"+fmt(x.y)+"</td><td>"+rup(x.p)+"</td></tr>"}).join(""):""}
+function predict(keep){var s=read(),bad=ids.some(function(k){return $(k).type=="number"&&isNaN(s[k])});var er=$("err");
+if(bad||s.hum>100||s.temp<5){er.hidden=false;er.textContent="Fill in every field with valid numbers. Temperature must be 5 °C or higher and humidity 100% or lower.";return}
+er.hidden=true;var r=calc(s);$("ry").textContent=fmt(r.y);$("rp").textContent=rup(r.p);
+$("rn").textContent=r.se<1?"Heads up: "+s.crop+" is normally grown in "+C[s.crop].s+", so this estimate includes a 40% rule-based off-season cut.":"Estimates use typical yields, prices and costs. Actual results vary with farm management and weather.";
+var u={temp:" °C",rain:" mm",hum:" %"},lb={crop:"Crop",region:"Region",season:"Season",year:"Year",temp:"Temperature",rain:"Rainfall",hum:"Humidity",soil:"Soil type"};
+$("sum").innerHTML=ids.map(function(k){return"<tr><th>"+lb[k]+"</th><td>"+s[k]+(u[k]||"")+"</td></tr>"}).join("");
+bars(s);radar(r.f);tips(s,r);if(!keep){save(s,r);drawH()}}
+$("go").onclick=function(){predict(false)};
+$("reset").onclick=function(){write(D);predict(true)};
+$("crop").onchange=function(){$("season").value=C[$("crop").value].s};
+$("clr").onclick=function(){try{localStorage.removeItem("agri_h")}catch(e){}drawH()};
+function show(v){["home","history","about"].forEach(function(x){$("v-"+x).classList.toggle("hide",x!=(v=="predict"?"home":v))});
+document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.v==v)});
+if(v=="predict")$("formcard").scrollIntoView({behavior:"smooth"})}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+write(D);predict(true);drawH();
+</script>
+
+<script>
+var user=null;
+function api(p,o){o=o||{};if(o.body&&typeof o.body!=="string"){o.body=JSON.stringify(o.body);o.headers={"Content-Type":"application/json"}}o.credentials="same-origin";
+return fetch(p,o).then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.error||"Request failed");return j})})}
+function who(){$("who").textContent=user||"Guest";$("auth").textContent=user?"Sign out":"Sign in";$("hl").textContent=user?"Your last 50 predictions, saved to your account.":"Your last 20 predictions, saved in this browser only. Sign in to keep them across devices."}
+$("auth").onclick=function(){if(user)api("/api/logout",{method:"POST"}).then(function(){user=null;who();drawH()});else{$("derr").textContent="";$("dlg").showModal()}};
+function authGo(p){api(p,{method:"POST",body:{email:$("em").value,password:$("pw").value}}).then(function(j){user=j.email;who();$("dlg").close();$("pw").value="";drawH()}).catch(function(e){$("derr").textContent=e.message})}
+$("lg").onclick=function(){authGo("/api/login")};$("rg").onclick=function(){authGo("/api/register")};$("cx").onclick=function(){$("dlg").close()};
+function renderH(h){$("he").hidden=h.length>0;$("clr").hidden=!h.length;$("ht").innerHTML=h.length?"<tr><th>When</th><th>Crop</th><th>Region</th><th>Season</th><th>Yield (kg/ha)</th><th>Profit (₹/ha)</th></tr>"+h.map(function(x){return"<tr><td>"+x.t+"</td><td>"+x.c+"</td><td>"+x.g+"</td><td>"+x.s+"</td><td>"+fmt(x.y)+"</td><td>"+rup(x.p)+"</td></tr>"}).join(""):""}
+drawH=function(){if(user)api("/api/history").then(function(h){renderH(h.map(function(x){return{t:new Date(x.ts*1000).toLocaleString("en-IN"),c:x.crop,g:x.region,s:x.season,y:x.yield,p:x.profit}}))}).catch(function(){});else renderH(hist())};
+$("clr").onclick=function(){if(user)api("/api/history",{method:"DELETE"}).then(drawH);else{try{localStorage.removeItem("agri_h")}catch(e){}drawH()}};
+var _p=predict;
+predict=function(keep){var s=read();if(ids.some(function(k){return $(k).type=="number"&&isNaN(s[k])})||s.hum>100||s.temp<5){_p(true);return}
+api("/api/predict",{method:"POST",body:s}).then(function(j){window.ALL=j.all;_p(true);var r=calc(s);r.f["Yield potential"]=Math.min(1,j.yield_kg_ha/C[s.crop].y);radar(r.f);$("ry").textContent=fmt(j.yield_kg_ha);$("rp").textContent=rup(j.profit);
+$("rn").textContent="Price used: ₹"+j.price_per_kg+"/kg ("+j.price_source+"). Yield model: "+j.model+" (soil and humidity are rule-of-thumb adjustments). Estimates only.";
+if(!keep){if(!user)save(s,{y:j.yield_kg_ha,p:j.profit});drawH()}}).catch(function(){window.ALL=null;_p(keep);$("rn").textContent="Server unreachable: showing a rough built-in estimate, not the trained model."})};
+$("wx").onclick=function(){var s=read();$("wxn").textContent="Fetching weather…";
+api("/api/weather?region="+encodeURIComponent(s.region)+"&season="+s.season+"&year="+s.year).then(function(j){$("temp").value=j.temp;$("rain").value=j.rain;$("hum").value=j.hum;$("wxn").textContent="Filled from "+j.period+" ("+j.source+"). Adjust if you expect a different season.";predict(true)}).catch(function(e){$("wxn").textContent=e.message})};
+api("/api/me").then(function(j){user=j.email;who();drawH();predict(true)}).catch(function(){who()});
+
+api("/api/config").then(function(c){
+  $("ft").textContent = "Yield model: " + c.model.source +
+    (c.model.r2 ? " (R² " + c.model.r2 + ")" : "") +
+    (c.live_prices ? " · live mandi prices on" : " · default prices");
+
+  var districts = c.districts || {};
+
+  function updateDistricts(){
+    var region = $("region").value;
+    var list = districts[region] || [];
+    $("district").innerHTML = list.map(function(d){
+      return "<option>" + d + "</option>";
+    }).join("");
+  }
+
+  $("region").addEventListener("change", updateDistricts);
+  updateDistricts();
+}).catch(function(e){console.error(e);});
+
+predict(true);
+
+</script>
+</body>
+</html>
